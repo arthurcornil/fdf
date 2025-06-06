@@ -6,7 +6,7 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 07:56:25 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 11:00:43 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/06/07 00:22:49 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,6 @@ int	main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 	map = parse_map(argv[1]);
-	draw_fdf(map);
+	render(map);
 	return (0);
 }

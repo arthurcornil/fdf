@@ -6,7 +6,7 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 08:10:42 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 11:07:24 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/06/07 00:41:09 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_HEIGHT 600
-# define WINDOW_WIDTH 600
+# define WINDOW_HEIGHT 700
+# define WINDOW_WIDTH 800
 # define WINDOW_PADDING 20
 
 typedef struct s_map
@@ -41,14 +41,27 @@ typedef struct s_env
 {
 	void			*mlx;
 	void			*window;
-	t_img			img;
 	unsigned int	win_height;
 	unsigned int	win_width;
-	unsigned int	padding;
+	float			zoom;
 }	t_env;
+
+typedef struct s_point
+{
+	int x;
+	int y;
+}	t_point;
+
+typedef struct s_voxel
+{
+	float	x;
+	float	y;
+	float	z;
+}	t_voxel;
 
 t_map	*parse_map(char *filename);
 void	free_map(t_map *map, int exit_status);
-void	draw_fdf(t_map *map);
+void	render(t_map *map);
+void	draw_line(t_point origin, t_point dest, t_img *img);
 
 #endif
