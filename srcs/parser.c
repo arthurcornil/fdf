@@ -6,12 +6,11 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 08:45:06 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 08:52:20 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/06/06 10:37:31 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
-#include <stdio.h>
 
 unsigned int	get_width(char **strs)
 {
@@ -31,19 +30,15 @@ int		*parse_line(char *line)
 	unsigned int		i;
 
 	strs = ft_split(line, ' '); // TODO:	CHECK ERROR MALLOCS
+	if (!strs)
+		return (NULL);
 	if (width == 0)
 		width = get_width(strs);
 	else if (width != get_width(strs))
-	{
-		exit(EXIT_FAILURE);
-		//TOO: EXIT
-	}
+		return (NULL);
 	nums = (int *)malloc(sizeof(int) * (size_t)width);
 	if (!nums)
-	{
-		exit(EXIT_FAILURE);
-		//TODO: EXIT
-	}
+		return (NULL);
 	i = 0;
 	while (i < width)
 	{
@@ -53,44 +48,66 @@ int		*parse_line(char *line)
 	return (nums);
 }
 
-t_map	*parse_map(char *filename)
+unsigned int	get_height(char *filename)
 {
-	char				*line;
-	t_map				*map;
-	int					fd;
-	unsigned int		i;
+	int				fd;
+	unsigned int	height;
+	char			*line;
 
 	fd = open(filename, O_RDONLY);
-	//TODO: CHECK FD
-	i = 0;
+	if (fd < 0)
+	{
+		perror("Error while opening the file");
+		return (0);
+	}
+	height = 0;
 	while ((line = get_next_line(fd)))
-		i ++;
+		height ++;
 	close(fd);
-	if (i == 0)
-	{
-		exit(EXIT_FAILURE);
-		//TODO: MANAGE ERROR
-	}
-	map = (t_map *)malloc(sizeof(t_map));
-	if (!map)
-	{
-		exit(EXIT_FAILURE);
-		//TODO: MANAGE ERROR
-	}
-	map->height = i;
-	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
+	if (height == 0)
+		ft_putendl_fd("Error: Empty File", 2);
+	return (height);
+}
+
+void	fill_points(t_map *map, char *filename)
+{
+	int				fd;
+	unsigned int	i;
+	char			*line;
+
 	map->width = 0;
 	fd = open(filename, O_RDONLY);
 	i = 0;
 	while ((line = get_next_line(fd)))
 	{
 		if (map->width == 0)
-			map->width = get_width(ft_split(line, ' '));
+			map->width = get_width(ft_split(line, ' ')); //TODO: MAYBE CHANGE THIS LINE?
 		map->points[i] = parse_line(line);
+		if (!map->points[i])
+		{
+			free_map(map);
+			exit(EXIT_FAILURE);
+		}
 		i ++;
 	}
-	printf("Map Height: %u\n", map->height);
-	printf("Map Width: %u\n", map->width);
+}
+
+t_map	*parse_map(char *filename)
+{
+	t_map			*map;
+
+	map = (t_map *)malloc(sizeof(t_map));
+	if (!map)
+		exit(EXIT_FAILURE);
+	map->height = get_height(filename);
+	if (map->height == 0)
+	{
+		free_map(map);
+		exit(EXIT_FAILURE);
+	}
+	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
+	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
+	fill_points(map, filename);
 
 	return (map);
 }

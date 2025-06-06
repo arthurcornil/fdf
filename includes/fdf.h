@@ -6,7 +6,7 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 08:10:42 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 08:52:13 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/06/06 10:37:11 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <fcntl.h>
+# include <stdio.h>
 
 typedef struct	s_map
 {
@@ -24,5 +25,6 @@ typedef struct	s_map
 }	t_map;
 
 t_map	*parse_map(char *filename);
+void	free_map(t_map *map);
 
 #endif

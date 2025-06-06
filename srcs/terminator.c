@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   terminator.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 07:56:25 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 10:38:00 by arcornil         ###   ########.fr       */
+/*   Created: 2025/06/06 10:36:54 by arcornil          #+#    #+#             */
+/*   Updated: 2025/06/06 10:37:03 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-int ret2(void)
+void	free_map(t_map *map)
 {
-	return 2;
+	unsigned int	i;
+	if (!map)
+		return ;
+	i = 0;
+	while (map->points && map->points[i])
+	{
+		free(map->points[i]);
+		i ++;
+	}
+	if (map->points)
+		free(map->points);
+	free(map);
 }
 
-int main(int argc, char *argv[])
-{
-	if (argc != 2)
-	{
-		ft_putendl_fd("Usage: ./fdf [PATH TO MAP]", 2);
-		exit(EXIT_FAILURE);
-	}
-	parse_map(argv[1]);
-	//draw_fdf();
-	return (0);
-}
