@@ -1,27 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   renderer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 07:56:25 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 11:00:43 by arcornil         ###   ########.fr       */
+/*   Created: 2025/06/06 11:00:06 by arcornil          #+#    #+#             */
+/*   Updated: 2025/06/06 11:09:02 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-int	main(int argc, char *argv[])
+int	test(int key, t_env *env)
 {
-	t_map	*map;
-
-	if (argc != 2)
-	{
-		ft_putendl_fd("Usage: ./fdf [PATH TO MAP]", 2);
-		exit(EXIT_FAILURE);
-	}
-	map = parse_map(argv[1]);
-	draw_fdf(map);
+	if (key == 53)
+		mlx_destroy_window(env->mlx, env->window);
 	return (0);
+}
+
+void	draw_fdf(t_map *map)
+{
+	t_env	env;
+
+	env.mlx = mlx_init();
+	env.window = mlx_new_window(env.mlx, 1920, 1080, "FdF");
+	mlx_key_hook(env.window, test, &env);
+	mlx_loop(env.mlx);
+	(void)map;
 }
