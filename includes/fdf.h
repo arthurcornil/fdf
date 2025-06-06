@@ -18,6 +18,10 @@
 # include <fcntl.h>
 # include <stdio.h>
 
+# define WINDOW_HEIGHT 600
+# define WINDOW_WIDTH 600
+# define WINDOW_PADDING 20
+
 typedef struct s_map
 {
 	unsigned int	height;
@@ -25,10 +29,22 @@ typedef struct s_map
 	int				**points;
 }	t_map;
 
+typedef struct	s_img {
+	void	*ptr;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_img;
+
 typedef struct s_env
 {
-	void	*mlx;
-	void	*window;
+	void			*mlx;
+	void			*window;
+	t_img			img;
+	unsigned int	win_height;
+	unsigned int	win_width;
+	unsigned int	padding;
 }	t_env;
 
 t_map	*parse_map(char *filename);
