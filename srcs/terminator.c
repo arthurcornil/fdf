@@ -12,9 +12,10 @@
 
 #include "../includes/fdf.h"
 
-void	free_map(t_map *map)
+void	free_map(t_map *map, int exit_status)
 {
 	unsigned int	i;
+
 	if (!map)
 		return ;
 	i = 0;
@@ -26,5 +27,6 @@ void	free_map(t_map *map)
 	if (map->points)
 		free(map->points);
 	free(map);
+	if (exit_status > 0)
+		exit(exit_status);
 }
-

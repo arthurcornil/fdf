@@ -17,7 +17,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-typedef struct	s_map
+typedef struct s_map
 {
 	unsigned int	height;
 	unsigned int	width;
@@ -25,6 +25,6 @@ typedef struct	s_map
 }	t_map;
 
 t_map	*parse_map(char *filename);
-void	free_map(t_map *map);
+void	free_map(t_map *map, int exit_status);
 
 #endif

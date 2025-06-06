@@ -17,19 +17,19 @@ unsigned int	get_width(char **strs)
 	unsigned int	width;
 
 	width = 0;
-	while(strs[width])
+	while (strs[width])
 		width ++;
 	return (width);
 }
 
-int		*parse_line(char *line)
+int	*parse_line(char *line)
 {
 	char				**strs;
 	int					*nums;
 	static unsigned int	width = 0;
 	unsigned int		i;
 
-	strs = ft_split(line, ' '); // TODO:	CHECK ERROR MALLOCS
+	strs = ft_split(line, ' ');
 	if (!strs)
 		return (NULL);
 	if (width == 0)
@@ -52,20 +52,20 @@ unsigned int	get_height(char *filename)
 {
 	int				fd;
 	unsigned int	height;
-	char			*line;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
 		perror("Error while opening the file");
+		close(fd);
 		return (0);
 	}
 	height = 0;
-	while ((line = get_next_line(fd)))
+	while (get_next_line(fd))
 		height ++;
 	close(fd);
 	if (height == 0)
-		ft_putendl_fd("Error: Empty File", 2);
+		ft_putendl_fd("Error: Empty file", 2);
 	return (height);
 }
 
@@ -77,19 +77,32 @@ void	fill_points(t_map *map, char *filename)
 
 	map->width = 0;
 	fd = open(filename, O_RDONLY);
-	i = 0;
-	while ((line = get_next_line(fd)))
+	if (fd < 0)
 	{
+		perror("Error while opening the file");
+		free_map(map, EXIT_FAILURE);
+	}
+	i = 0;
+	while (true)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
 		if (map->width == 0)
 			map->width = get_width(ft_split(line, ' ')); //TODO: MAYBE CHANGE THIS LINE?
 		map->points[i] = parse_line(line);
 		if (!map->points[i])
 		{
-			free_map(map);
-			exit(EXIT_FAILURE);
+			free(line);
+			while (get_next_line(fd))
+				;
+			close(fd);
+			free_map(map, EXIT_FAILURE);
 		}
+		free(line);
 		i ++;
 	}
+	close(fd);
 }
 
 t_map	*parse_map(char *filename)
@@ -101,13 +114,9 @@ t_map	*parse_map(char *filename)
 		exit(EXIT_FAILURE);
 	map->height = get_height(filename);
 	if (map->height == 0)
-	{
-		free_map(map);
-		exit(EXIT_FAILURE);
-	}
+		free_map(map, EXIT_FAILURE);
 	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
 	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
 	fill_points(map, filename);
-
 	return (map);
 }

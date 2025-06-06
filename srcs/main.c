@@ -12,12 +12,7 @@
 
 #include "../includes/fdf.h"
 
-int ret2(void)
-{
-	return 2;
-}
-
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	if (argc != 2)
 	{
