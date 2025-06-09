@@ -6,7 +6,7 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 08:10:42 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/07 00:41:09 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/06/07 00:43:03 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_env
 	unsigned int	win_height;
 	unsigned int	win_width;
 	float			zoom;
+	t_map			*map;
 }	t_env;
 
 typedef struct s_point
@@ -63,5 +64,6 @@ t_map	*parse_map(char *filename);
 void	free_map(t_map *map, int exit_status);
 void	render(t_map *map);
 void	draw_line(t_point origin, t_point dest, t_img *img);
+void	put_pixel(t_img *img, t_point pixel, int color);
 
 #endif

@@ -9,7 +9,8 @@ SRCS_DIR=./srcs/
 SRCS=$(SRCS_DIR)main.c\
 	 $(SRCS_DIR)parser.c\
 	 $(SRCS_DIR)renderer.c\
-	 $(SRCS_DIR)terminator.c
+	 $(SRCS_DIR)terminator.c\
+	 $(SRCS_DIR)painter.c
 
 OBJS=$(SRCS:.c=.o)
 
@@ -22,7 +23,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C ./libft/
-	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a mlx/libmlx.a -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a mlx/libmlx.a -Lmlx -lmlx -framework OpenGL -framework AppKit -fsanitize=address -o $(NAME)
 
 clean:
 	$(RM) $(OBJS)
