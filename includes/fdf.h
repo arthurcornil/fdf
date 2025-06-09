@@ -18,8 +18,8 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# define WINDOW_HEIGHT 700
-# define WINDOW_WIDTH 800
+# define WINDOW_HEIGHT 1080
+# define WINDOW_WIDTH 1920
 # define WINDOW_PADDING 20
 
 typedef struct s_map
@@ -44,6 +44,7 @@ typedef struct s_env
 	unsigned int	win_height;
 	unsigned int	win_width;
 	float			zoom;
+	t_map			*map;
 }	t_env;
 
 typedef struct s_point
@@ -62,6 +63,7 @@ typedef struct s_voxel
 t_map	*parse_map(char *filename);
 void	free_map(t_map *map, int exit_status);
 void	render(t_map *map);
+void	put_pixel(t_img *img, t_point pixel, int color);
 void	draw_line(t_point origin, t_point dest, t_img *img);
 
 #endif

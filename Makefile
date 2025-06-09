@@ -9,7 +9,8 @@ SRCS_DIR=./srcs/
 SRCS=$(SRCS_DIR)main.c\
 	 $(SRCS_DIR)parser.c\
 	 $(SRCS_DIR)renderer.c\
-	 $(SRCS_DIR)terminator.c
+	 $(SRCS_DIR)terminator.c\
+	 $(SRCS_DIR)painter.c
 
 OBJS=$(SRCS:.c=.o)
 

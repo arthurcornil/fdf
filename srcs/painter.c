@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw_line.c                                        :+:      :+:    :+:   */
+/*   painter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,11 +12,11 @@
 
 #include "../includes/fdf.h"
 
-void	put_pixel(t_img *img, int x, int y, int color)
+void	put_pixel(t_img *img, t_point pixel, int color)
 {
 	char	*dst;
 
-	dst = img->addr + ((y * img->line_length) + (x * (img->bits_per_pixel / 8)));
+	dst = img->addr + ((pixel.y * img->line_length) + (pixel.x * (img->bits_per_pixel / 8)));
 	*(unsigned int *)dst = color;
 }
 
@@ -36,7 +36,7 @@ void	draw_line(t_point origin, t_point dest, t_img *img)
 	decision = (delta.x > delta.y ? delta.x : -delta.y) / 2;
 	while (true)
 	{
-		put_pixel(img, point.x, point.y, 0x000000FF);
+		put_pixel(img, point, 0x000000FF);
 		if (point.x == dest.x && point.y == dest.y)
 			break ;
 		decision2 = decision;
