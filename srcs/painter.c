@@ -20,7 +20,7 @@ void	put_pixel(t_img *img, t_point pixel, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	draw_line(t_point origin, t_point dest, t_img *img)
+void	draw_line(t_img *img, t_point origin, t_point dest, int color)
 {
 	t_point	delta;
 	t_point	point;
@@ -36,7 +36,7 @@ void	draw_line(t_point origin, t_point dest, t_img *img)
 	decision = (delta.x > delta.y ? delta.x : -delta.y) / 2;
 	while (true)
 	{
-		put_pixel(img, point, 0x000000FF);
+		put_pixel(img, point, color);
 		if (point.x == dest.x && point.y == dest.y)
 			break ;
 		decision2 = decision;
