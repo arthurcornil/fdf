@@ -23,7 +23,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C ./libft/
-	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a mlx/libmlx.a -Lmlx -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) ./libft/libft.a mlx/libmlx.a -Lmlx -lmlx -framework OpenGL -framework AppKit -g -o $(NAME)
 
 clean:
 	$(RM) $(OBJS)

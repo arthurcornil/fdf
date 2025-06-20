@@ -30,3 +30,4 @@ void	free_map(t_map *map, int exit_status)
 	if (exit_status > 0)
 		exit(exit_status);
 }
+

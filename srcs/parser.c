@@ -12,6 +12,39 @@
 
 #include "../includes/fdf.h"
 
+int	is_lower(int a, int b)
+{
+	return (a < b);
+}
+
+int	is_higher(int a, int b)
+{
+	return (a > b);
+}
+
+int	get_extreme_point(t_map *map, t_cmp_ft cmp, int init_val)
+{
+	unsigned int	x;
+	unsigned int	y;
+	int				curr_extreme;
+
+	y = 0;
+	curr_extreme = init_val;
+	while (y < map->height)
+	{
+		x = 0;
+		while (x < map->width)
+		{
+			if (cmp(map->points[y][x], curr_extreme))
+				curr_extreme = map->points[y][x];
+			x ++;
+		}
+		y ++;
+	}
+	return (curr_extreme);
+}
+
+
 unsigned int	get_width(char **strs)
 {
 	unsigned int	width;
@@ -88,6 +121,7 @@ void	fill_points(t_map *map, char *filename)
 		line = get_next_line(fd);
 		if (!line)
 			break ;
+		line[ft_strlen(line) - 1] = (char)0;
 		if (map->width == 0)
 			map->width = get_width(ft_split(line, ' ')); //TODO: MAYBE CHANGE THIS LINE?
 		map->points[i] = parse_line(line);
@@ -118,5 +152,7 @@ t_map	*parse_map(char *filename)
 	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
 	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
 	fill_points(map, filename);
+	map->lowest = get_extreme_point(map, is_lower, INT_MIN);
+	map->highest = get_extreme_point(map, is_higher, INT_MAX);
 	return (map);
 }

@@ -17,16 +17,19 @@
 # include "../mlx/mlx.h"
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
+# include <math.h>
 
-# define WINDOW_HEIGHT 700
-# define WINDOW_WIDTH 1000
-# define WINDOW_PADDING 20
+# define WINDOW_HEIGHT 20
+# define WINDOW_WIDTH 40
 
 typedef struct s_map
 {
 	unsigned int	height;
 	unsigned int	width;
 	int				**points;
+	int				lowest;
+	int				highest;
 }	t_map;
 
 typedef struct	s_img {
@@ -55,17 +58,21 @@ typedef struct s_view
 	float	zoom;
 	t_point	shift;
 	float	z_scale;
+	t_voxel	rotation;
 }	t_view;
 
 typedef struct s_env
 {
 	void			*mlx;
 	void			*window;
-	unsigned int	win_height;
-	unsigned int	win_width;
+	int				win_height;
+	int				win_width;
+	int				menu_width;
 	t_map			*map;
 	t_view			view;
 }	t_env;
+
+typedef int (*t_cmp_ft)(int, int);
 
 t_map	*parse_map(char *filename);
 void	free_map(t_map *map, int exit_status);
