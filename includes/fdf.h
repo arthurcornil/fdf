@@ -20,8 +20,8 @@
 # include <limits.h>
 # include <math.h>
 
-# define WINDOW_HEIGHT 20
-# define WINDOW_WIDTH 40
+# define WINDOW_HEIGHT 563
+# define WINDOW_WIDTH 900
 
 typedef struct s_map
 {

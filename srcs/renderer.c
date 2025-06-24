@@ -124,6 +124,13 @@ void	render_menu(t_env *env)
 	mlx_string_put(env->mlx, env->window, 15, 90 + margin, 0x00FFFFFF, "2: + z scale");
 }
 
+void	put_window(t_env *env)
+{
+	mlx_clear_window(env->mlx, env->window);
+	render_menu(env);
+	draw_fdf(env);
+}
+
 int	handle_keypress(int key, t_env *env)
 {
 	if (key == 6)
@@ -145,9 +152,7 @@ int	handle_keypress(int key, t_env *env)
 	else if (key == 15)
 		env->view.rotation.z += 0.2f;
 	
-	mlx_clear_window(env->mlx, env->window);
-	render_menu(env);
-	draw_fdf(env);
+	put_window(env);
 	return (0);
 }
 
@@ -160,13 +165,12 @@ void	render(t_map *map)
 	env.view.shift = (t_point){ 0, 0 };
 	env.view.rotation = (t_voxel){ 0.0f, 0.0f, 0.0f };
 	env.view.z_scale = 1.0f;
-	env.win_height = 563;
-	env.win_width = 900;
+	env.win_height = WINDOW_HEIGHT;
+	env.win_width = WINDOW_WIDTH;
 	env.menu_width = 200;
 	env.mlx = mlx_init();
 	env.window = mlx_new_window(env.mlx, env.win_width + env.menu_width, env.win_height, "FdF");
-	render_menu(&env);
-	draw_fdf(&env);
+	put_window(&env);
 	mlx_key_hook(env.window, handle_keypress, &env);
 	mlx_loop(env.mlx);
 }

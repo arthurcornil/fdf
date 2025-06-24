@@ -15,6 +15,8 @@
 void	put_pixel(t_img *img, t_point pixel, int color)
 {
 	char	*dst;
+	if (pixel.x < 0 || pixel.x >= WINDOW_WIDTH || pixel.y < 0 || pixel.y >= WINDOW_HEIGHT)
+		return;
 
 	dst = img->addr + ((pixel.y * img->line_length) + (pixel.x * (img->bits_per_pixel / 8)));
 	*(unsigned int *)dst = color;
