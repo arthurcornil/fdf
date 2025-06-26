@@ -41,15 +41,14 @@ void	rotate_z(t_voxel *voxel, t_env *env)
 	voxel->y = rotated_y + cy;
 }
 
-void	set_img_background(t_env *env, t_img *img)
+void	set_img_background(int height, int width, t_img *img, int color)
 {
-	int	background_color = 0x00050214;
 	int	i = 0;
-	int	total_pixels = env->win_width * env->win_height;
+	int	total_pixels = height * width;
 	int	*buffer = (int *)img->addr;
 
 	while (i < total_pixels)
-		buffer[i++] = background_color;
+		buffer[i++] = color;
 }
 
 void	draw_fdf(t_env *env)
@@ -64,7 +63,7 @@ void	draw_fdf(t_env *env)
 
 	img.ptr = mlx_new_image(env->mlx, env->win_width, env->win_height);
 	img.addr = mlx_get_data_addr(img.ptr, &img.bits_per_pixel, &img.line_length, &img.endian);
-	set_img_background(env, &img);
+	set_img_background(env->win_height, env->win_width, &img, 0x00050214);
 	y = 0;
 	while (y < env->map->height)
 	{
@@ -109,19 +108,26 @@ void	draw_fdf(t_env *env)
 		y ++;
 	}
 	mlx_put_image_to_window(env->mlx, env->window, img.ptr, env->menu_width, 0);
+	mlx_destroy_image(env->mlx, img.ptr);
 }
 
 void	render_menu(t_env *env)
 {
-	int margin;
+	int		margin;
+	t_img	img;
 
+	img.ptr = mlx_new_image(env->mlx, env->menu_width, env->win_height);
+	img.addr = mlx_get_data_addr(img.ptr, &img.bits_per_pixel, &img.line_length, &img.endian);
+	set_img_background(env->win_height, env->win_height, &img, 0x00FFFFFF);
+	mlx_put_image_to_window(env->mlx, env->window, img.ptr, 0, 0);
+	mlx_destroy_image(env->mlx, img.ptr);
 	margin = 50;
-	mlx_string_put(env->mlx, env->window, 55, 10, 0x00FFFFFF, "Controls");
-	mlx_string_put(env->mlx, env->window, 15, 10 + margin, 0x00FFFFFF, "z: zoom in");
-	mlx_string_put(env->mlx, env->window, 15, 30 + margin, 0x00FFFFFF, "x: zoom out");
-	mlx_string_put(env->mlx, env->window, 15, 50 + margin, 0x00FFFFFF, "r: rotate");
-	mlx_string_put(env->mlx, env->window, 15, 70 + margin, 0x00FFFFFF, "1: - z scale");
-	mlx_string_put(env->mlx, env->window, 15, 90 + margin, 0x00FFFFFF, "2: + z scale");
+	mlx_string_put(env->mlx, env->window, 55, 10, 0x00050214, "Controls");
+	mlx_string_put(env->mlx, env->window, 15, 10 + margin, 0x00050214, "z: zoom in");
+	mlx_string_put(env->mlx, env->window, 15, 30 + margin, 0x00050214, "x: zoom out");
+	mlx_string_put(env->mlx, env->window, 15, 50 + margin, 0x00050214, "r: rotate");
+	mlx_string_put(env->mlx, env->window, 15, 70 + margin, 0x00050214, "1: - z scale");
+	mlx_string_put(env->mlx, env->window, 15, 90 + margin, 0x00050214, "2: + z scale");
 }
 
 void	put_window(t_env *env)
@@ -150,7 +156,9 @@ int	handle_keypress(int key, t_env *env)
 	else if (key == 19)
 		env->view.z_scale += 1.0f;
 	else if (key == 15)
-		env->view.rotation.z += 0.2f;
+		env->view.rotation.z += 0.05f;
+	else if (key == 53)
+		free_and_exit(env);
 	
 	put_window(env);
 	return (0);
@@ -171,6 +179,7 @@ void	render(t_map *map)
 	env.mlx = mlx_init();
 	env.window = mlx_new_window(env.mlx, env.win_width + env.menu_width, env.win_height, "FdF");
 	put_window(&env);
-	mlx_key_hook(env.window, handle_keypress, &env);
+	mlx_hook(env.window, 2, 1L << 0, handle_keypress, &env);
+	mlx_hook(env.window, 17, 0, handle_keypress, &env);
 	mlx_loop(env.mlx);
 }

@@ -31,3 +31,9 @@ void	free_map(t_map *map, int exit_status)
 		exit(exit_status);
 }
 
+int	free_and_exit(t_env *env)
+{
+	free_map(env->map, -1);
+	mlx_destroy_window(env->mlx, env->window);
+	exit(EXIT_SUCCESS);
+}

@@ -79,5 +79,6 @@ void	free_map(t_map *map, int exit_status);
 void	render(t_map *map);
 void	put_pixel(t_img *img, t_point pixel, int color);
 void	draw_line(t_img *img, t_point origin, t_point dest, int color);
+int		free_and_exit(t_env *env);
 
 #endif
