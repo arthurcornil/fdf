@@ -22,6 +22,9 @@
 
 # define WINDOW_HEIGHT 563
 # define WINDOW_WIDTH 900
+# define START_COLOR 0x0066FF
+# define END_COLOR 0x00FFFF
+# define BG_COLOR 0x050214
 
 typedef struct s_map
 {
@@ -72,13 +75,22 @@ typedef struct s_env
 	t_view			view;
 }	t_env;
 
+typedef struct s_color
+{
+	int	red;
+	int	green;
+	int	blue;
+}	t_color;
+
 typedef int (*t_cmp_ft)(int, int);
 
 t_map	*parse_map(char *filename);
 void	free_map(t_map *map, int exit_status);
 void	render(t_map *map);
 void	put_pixel(t_img *img, t_point pixel, int color);
-void	draw_line(t_img *img, t_point origin, t_point dest, int color);
+void	draw_line(t_img *img, t_point a, t_point b, t_color color_a, t_color color_b);
+float	get_percentage(int current, int min, int max);
+int		color_to_int(t_color color);
 int		free_and_exit(t_env *env);
 
 #endif

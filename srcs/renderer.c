@@ -51,6 +51,44 @@ void	set_img_background(int height, int width, t_img *img, int color)
 		buffer[i++] = color;
 }
 
+float get_percentage(int current, int min, int max)
+{
+	if (max == min)
+		return 0.0f;
+	return (float)(current - min) / (float)(max - min);
+}
+
+t_color	int_to_color(int color)
+{
+	t_color	broken_color;
+	broken_color.red = (color >> 16) & 0xFF;
+	broken_color.green = (color >> 8) & 0xFF;
+	broken_color.blue = color & 0xFF;
+
+	return (broken_color);
+}
+
+int	color_to_int(t_color color)
+{
+	return ((color.red << 16) | (color.green << 8) | color.blue);
+}
+
+static t_color	get_color(int z, t_map *map, int start, int end)
+{
+	float	percentage;
+	t_color	color_start;
+	t_color	color_end;
+	t_color	color;
+
+	percentage = get_percentage(z, map->lowest, map->highest);
+	color_start = int_to_color(start);
+	color_end = int_to_color(end);
+	color.red = color_start.red + ((color_end.red - color_start.red) * percentage);
+	color.green = color_start.green + ((color_end.green - color_start.green) * percentage);
+	color.blue = color_start.blue + ((color_end.blue - color_start.blue) * percentage);
+	return (color);
+}
+
 void	draw_fdf(t_env *env)
 {
 	t_img			img;
@@ -59,28 +97,28 @@ void	draw_fdf(t_env *env)
 	t_voxel			voxel;
 	t_point			pixel;
 	t_point			next_pixel;
-	int				color;
+	t_color   		color1;
+	t_color			color2;
 
 	img.ptr = mlx_new_image(env->mlx, env->win_width, env->win_height);
 	img.addr = mlx_get_data_addr(img.ptr, &img.bits_per_pixel, &img.line_length, &img.endian);
-	set_img_background(env->win_height, env->win_width, &img, 0x00050214);
+	set_img_background(env->win_height, env->win_width, &img, BG_COLOR);
 	y = 0;
 	while (y < env->map->height)
 	{
 		x = 0;
 		while (x < env->map->width)
 		{
-			color = 0x00FFFFFF;
+			color1 = get_color(env->map->points[y][x], env->map, START_COLOR, END_COLOR);
 			voxel = (t_voxel){ x, y, env->map->points[y][x] };
 			rotate_z(&voxel, env);
 			pixel = voxel_to_pixel(
 				voxel,
 				env
 			);
-			if (env->map->points[y][x] > 0)
-				color = 0x0000FF00;
 			if (x < env->map->width - 1)
 			{
+				color2 = get_color(env->map->points[y][x + 1], env->map, START_COLOR, END_COLOR);
 				voxel = (t_voxel) { x + 1, y, env->map->points[y][x + 1] };
 				rotate_z(&voxel, env);
 				next_pixel = voxel_to_pixel(voxel, env);
@@ -88,11 +126,13 @@ void	draw_fdf(t_env *env)
 					&img,
 					pixel,
 					next_pixel,
-					color
+					color1,
+					color2
 				);
 			}
 			if (y < env->map->height - 1)
 			{
+				color2 = get_color(env->map->points[y + 1][x], env->map, START_COLOR, END_COLOR);
 				voxel = (t_voxel) { x, y + 1, env->map->points[y + 1][x] };
 				rotate_z(&voxel, env);
 				next_pixel = voxel_to_pixel(voxel, env);
@@ -100,7 +140,8 @@ void	draw_fdf(t_env *env)
 					&img,
 					pixel,
 					next_pixel,
-					color
+					color1,
+					color2
 				);
 			}
 			x ++;
@@ -128,6 +169,7 @@ void	render_menu(t_env *env)
 	mlx_string_put(env->mlx, env->window, 15, 50 + margin, 0x00050214, "r: rotate");
 	mlx_string_put(env->mlx, env->window, 15, 70 + margin, 0x00050214, "1: - z scale");
 	mlx_string_put(env->mlx, env->window, 15, 90 + margin, 0x00050214, "2: + z scale");
+	mlx_string_put(env->mlx, env->window, 15, 110 + margin, 0x00050214, "arrows: translate");
 }
 
 void	put_window(t_env *env)
@@ -156,7 +198,7 @@ int	handle_keypress(int key, t_env *env)
 	else if (key == 19)
 		env->view.z_scale += 1.0f;
 	else if (key == 15)
-		env->view.rotation.z += 0.05f;
+		env->view.rotation.z += 0.025f;
 	else if (key == 53)
 		free_and_exit(env);
 	

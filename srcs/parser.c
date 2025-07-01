@@ -152,7 +152,7 @@ t_map	*parse_map(char *filename)
 	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
 	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
 	fill_points(map, filename);
-	map->lowest = get_extreme_point(map, is_lower, INT_MIN);
-	map->highest = get_extreme_point(map, is_higher, INT_MAX);
+	map->lowest = get_extreme_point(map, is_lower, INT_MAX);
+	map->highest = get_extreme_point(map, is_higher, INT_MIN);
 	return (map);
 }
