@@ -16,15 +16,15 @@ void	rotate_z(t_voxel *voxel, t_env *env)
 {
 	float	tmp_x;
 	float	tmp_y;
-	float	cx = env->map->width / 2.0f;
-	float	cy = env->map->height / 2.0f;
+	float	cx;
+	float	cy;
 
+	cx = env->map->width / 2.0f;
+	cy = env->map->height / 2.0f;
 	tmp_x = voxel->x - cx;
 	tmp_y = voxel->y - cy;
-
-	float angle = env->view.rotation.z;
-	float rotated_x = tmp_x * cos(angle) - tmp_y * sin(angle);
-	float rotated_y = tmp_x * sin(angle) + tmp_y * cos(angle);
+	float rotated_x = tmp_x * cos(env->view.rotation.z) - tmp_y * sin(env->view.rotation.z);
+	float rotated_y = tmp_x * sin(env->view.rotation.z) + tmp_y * cos(env->view.rotation.z);
 	voxel->x = rotated_x + cx;
 	voxel->y = rotated_y + cy;
 }
@@ -204,10 +204,6 @@ int	handle_keypress(int key, t_env *env)
 		env->view.z_scale += 1.0f;
 	else if (key == 6)
 		env->view.rotation.z += 0.025f;
-	else if (key == 7)
-		env->view.rotation.x += 0.025f;
-	else if (key == 16)
-		env->view.rotation.y += 0.025f;
 	else if (key == 53)
 		free_and_exit(env);
 	

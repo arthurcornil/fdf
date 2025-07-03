@@ -121,7 +121,7 @@ void	fill_points(t_map *map, char *filename)
 		line = get_next_line(fd);
 		if (!line)
 			break ;
-		line[ft_strlen(line) - 1] = (char)0;
+		line[ft_strlen(line)] = (char)0;
 		if (map->width == 0)
 			map->width = get_width(ft_split(line, ' ')); //TODO: MAYBE CHANGE THIS LINE?
 		map->points[i] = parse_line(line);
