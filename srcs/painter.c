@@ -22,7 +22,7 @@ void	put_pixel(t_img *img, t_point pixel, int color)
 	*(unsigned int *)dst = color;
 }
 
-void	ft_swap_structs(void *a, void *b, size_t size)
+void	ft_swap_anything(void *a, void *b, size_t size)
 {
 	unsigned char	tmp;
 	size_t			i;
@@ -60,8 +60,8 @@ void draw_vertical_line(t_img *img, t_point a, t_point b, t_color color_a, t_col
 
 	if (a.y > b.y)
 	{
-		ft_swap_structs(&a, &b, sizeof(t_point));
-		ft_swap_structs(&color_a, &color_b, sizeof(t_color));
+		ft_swap_anything(&a, &b, sizeof(t_point));
+		ft_swap_anything(&color_a, &color_b, sizeof(t_color));
 	}
 	delta.y = b.y - a.y;
 	delta.x = b.x - a.x;
@@ -103,8 +103,8 @@ void draw_horizontal_line(t_img *img, t_point a, t_point b, t_color color_a, t_c
 	(void)color_b;
 	if (a.x > b.x)
 	{
-		ft_swap_structs(&a, &b, sizeof(t_point));
-		ft_swap_structs(&color_a, &color_b, sizeof(t_color));
+		ft_swap_anything(&a, &b, sizeof(t_point));
+		ft_swap_anything(&color_a, &color_b, sizeof(t_color));
 	}
 	delta.x = b.x - a.x;
 	delta.y = b.y - a.y;

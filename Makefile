@@ -1,6 +1,6 @@
 CC=cc
 
-CFLAGS=-Wall -Wextra -Werror -fsanitize=undefined -g
+CFLAGS=-Wall -Wextra -Werror -fsanitize=address -g
 
 NAME=fdf
 
@@ -17,7 +17,7 @@ OBJS=$(SRCS:.c=.o)
 RM=rm -f
 
 %.o: %.c
-	$(CC) -Wall -Wextra -Werror -Imlx -c $< -o $@
+	$(CC) -Wall -Wextra -Werror -Imlx -c -g $< -o $@
 
 all: $(NAME)
 

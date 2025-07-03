@@ -148,7 +148,10 @@ t_map	*parse_map(char *filename)
 		exit(EXIT_FAILURE);
 	map->height = get_height(filename);
 	if (map->height == 0)
+	{
+		map->points = NULL;
 		free_map(map, EXIT_FAILURE);
+	}
 	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
 	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
 	fill_points(map, filename);
