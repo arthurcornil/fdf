@@ -203,7 +203,7 @@ int	handle_keypress(int key, t_env *env)
 	else if (key == 19)
 		env->view.z_scale += 1.0f;
 	else if (key == 6)
-		env->view.rotation.z += 0.025f;
+		env->view.rotation.z += 0.02f;
 	else if (key == 53)
 		free_and_exit(env);
 	
