@@ -12,6 +12,19 @@
 
 #include "../includes/fdf.h"
 
+void	free_strs(char **strs)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		i ++;
+	}
+	free(strs);
+}
+
 void	free_map(t_map *map, int exit_status)
 {
 	unsigned int	i;
@@ -35,5 +48,6 @@ int	free_and_exit(t_env *env)
 {
 	free_map(env->map, -1);
 	mlx_destroy_window(env->mlx, env->window);
+	mlx_destroy_display(env->mlx);
 	exit(EXIT_SUCCESS);
 }

@@ -6,44 +6,11 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 08:45:06 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 10:37:31 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/07/19 14:21:33 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
-
-int	is_lower(int a, int b)
-{
-	return (a < b);
-}
-
-int	is_higher(int a, int b)
-{
-	return (a > b);
-}
-
-int	get_extreme_point(t_map *map, t_cmp_ft cmp, int init_val)
-{
-	unsigned int	x;
-	unsigned int	y;
-	int				curr_extreme;
-
-	y = 0;
-	curr_extreme = init_val;
-	while (y < map->height)
-	{
-		x = 0;
-		while (x < map->width)
-		{
-			if (cmp(map->points[y][x], curr_extreme))
-				curr_extreme = map->points[y][x];
-			x ++;
-		}
-		y ++;
-	}
-	return (curr_extreme);
-}
-
 
 unsigned int	get_width(char **strs)
 {
@@ -55,36 +22,11 @@ unsigned int	get_width(char **strs)
 	return (width);
 }
 
-int	*parse_line(char *line)
-{
-	char				**strs;
-	int					*nums;
-	static unsigned int	width = 0;
-	unsigned int		i;
-
-	strs = ft_split(line, ' ');
-	if (!strs)
-		return (NULL);
-	if (width == 0)
-		width = get_width(strs);
-	else if (width != get_width(strs))
-		return (NULL);
-	nums = (int *)malloc(sizeof(int) * (size_t)width);
-	if (!nums)
-		return (NULL);
-	i = 0;
-	while (i < width)
-	{
-		nums[i] = ft_atoi(strs[i]);
-		i ++;
-	}
-	return (nums);
-}
-
 unsigned int	get_height(char *filename)
 {
 	int				fd;
 	unsigned int	height;
+	char			*line;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
@@ -94,54 +36,24 @@ unsigned int	get_height(char *filename)
 		return (0);
 	}
 	height = 0;
-	while (get_next_line(fd))
+	while (true)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		free(line);
 		height ++;
+	}
 	close(fd);
 	if (height == 0)
 		ft_putendl_fd("Error: Empty file", 2);
 	return (height);
 }
 
-void	fill_points(t_map *map, char *filename)
-{
-	int				fd;
-	unsigned int	i;
-	char			*line;
-
-	map->width = 0;
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Error while opening the file");
-		free_map(map, EXIT_FAILURE);
-	}
-	i = 0;
-	while (true)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		line[ft_strlen(line)] = (char)0;
-		if (map->width == 0)
-			map->width = get_width(ft_split(line, ' ')); //TODO: MAYBE CHANGE THIS LINE?
-		map->points[i] = parse_line(line);
-		if (!map->points[i])
-		{
-			free(line);
-			while (get_next_line(fd))
-				;
-			close(fd);
-			free_map(map, EXIT_FAILURE);
-		}
-		free(line);
-		i ++;
-	}
-	close(fd);
-}
-
 t_map	*parse_map(char *filename)
 {
-	t_map			*map;
+	t_map	*map;
+	int		fd;
 
 	map = (t_map *)malloc(sizeof(t_map));
 	if (!map)
@@ -154,7 +66,8 @@ t_map	*parse_map(char *filename)
 	}
 	map->points = (int **)malloc(sizeof(int *) * (size_t)map->height);
 	ft_bzero(map->points, sizeof(int *) * (size_t)map->height);
-	fill_points(map, filename);
+	fd = open(filename, O_RDONLY);
+	fill_lines(map, fd);
 	map->lowest = get_extreme_point(map, is_lower, INT_MAX);
 	map->highest = get_extreme_point(map, is_higher, INT_MIN);
 	return (map);

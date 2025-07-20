@@ -12,22 +12,6 @@
 
 #include "libft.h"
 
-void	*ft_memset(void *b, int c, size_t len)
-{
-	unsigned int	i;
-	unsigned char	*p;
-
-	p = (unsigned char *) b;
-	i = 0;
-	while (i < len)
-	{
-		p[i] = (unsigned char) c;
-		i ++;
-	}
-	b = (void *) p;
-	return (b);
-}
-
 bool	found_nl(char *str)
 {
 	while (*str)
