@@ -6,11 +6,25 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 10:36:54 by arcornil          #+#    #+#             */
-/*   Updated: 2025/06/06 10:37:03 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:36:02 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+void	free_gnl_buffer(int fd)
+{
+	char	*line;
+
+	while (true)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		free(line);
+	}
+	close(fd);
+}
 
 void	free_strs(char **strs)
 {
@@ -19,10 +33,12 @@ void	free_strs(char **strs)
 	i = 0;
 	while (strs[i])
 	{
-		free(strs[i]);
+		if (strs[i])
+			free(strs[i]);
 		i ++;
 	}
-	free(strs);
+	if (strs)
+		free(strs);
 }
 
 void	free_map(t_map *map, int exit_status)
@@ -34,7 +50,8 @@ void	free_map(t_map *map, int exit_status)
 	i = 0;
 	while (map->points && i < map->height)
 	{
-		free(map->points[i]);
+		if (map->points[i])
+			free(map->points[i]);
 		i ++;
 	}
 	if (map->points)
@@ -49,5 +66,6 @@ int	free_and_exit(t_env *env)
 	free_map(env->map, -1);
 	mlx_destroy_window(env->mlx, env->window);
 	mlx_destroy_display(env->mlx);
+	free(env->mlx);
 	exit(EXIT_SUCCESS);
 }

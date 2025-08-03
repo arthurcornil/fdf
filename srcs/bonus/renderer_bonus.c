@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "../../includes/fdf.h"
 
 void	set_background(t_point	dimensions, t_img *img, int color, int offset)
 {
@@ -63,8 +63,10 @@ void	put_window(t_env *env)
 	img.ptr = mlx_new_image(env->mlx, env->win_width, env->win_height);
 	img.addr = mlx_get_data_addr(img.ptr, &img.bits_per_pixel,
 			&img.line_length, &img.endian);
-	set_background((t_point){env->win_width, env->win_height},
-		&img, BG_COLOR, 0);
+	set_background((t_point){env->menu_width, env->win_height},
+		&img, MENU_COLOR, 0);
+	set_background((t_point){env->win_width - env->menu_width, env->win_height},
+		&img, BG_COLOR, env->menu_width);
 	draw_fdf(env, &img);
 	mlx_put_image_to_window(env->mlx, env->window, img.ptr, 0, 0);
 	draw_menu(env);
@@ -73,8 +75,27 @@ void	put_window(t_env *env)
 
 int	handle_keypress(int key, t_env *env)
 {
-	if (key == KEY_ESC)
+	if (key == KEY_I)
+		env->view.zoom += 0.1f;
+	else if (key == KEY_O)
+		env->view.zoom -= 0.1f;
+	else if (key == KEY_LEFT)
+		env->view.shift.x -= 10;
+	else if (key == KEY_RIGHT)
+		env->view.shift.x += 10;
+	else if (key == KEY_DOWN)
+		env->view.shift.y += 10;
+	else if (key == KEY_UP)
+		env->view.shift.y -= 10;
+	else if (key == KEY_1)
+		env->view.z_scale -= 1.0f;
+	else if (key == KEY_2)
+		env->view.z_scale += 1.0f;
+	else if (key == KEY_Z)
+		env->view.rotation.z += 0.02f;
+	else if (key == KEY_ESC)
 		free_and_exit(env);
+	put_window(env);
 	return (0);
 }
 

@@ -10,20 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/fdf.h"
+#include "../../includes/fdf.h"
+
+void	rotate_z(t_voxel *voxel, t_env *env)
+{
+	float	tmp_x;
+	float	tmp_y;
+	float	cx;
+	float	cy;
+
+	cx = env->map->width / 2.0f;
+	cy = env->map->height / 2.0f;
+	tmp_x = voxel->x - cx;
+	tmp_y = voxel->y - cy;
+	voxel->x = tmp_x * cos(env->view.rotation.z)
+		- tmp_y * sin(env->view.rotation.z) + cx;
+	voxel->y = tmp_x * sin(env->view.rotation.z)
+		+ tmp_y * cos(env->view.rotation.z) + cy;
+}
 
 t_point	voxel_to_pixel(t_voxel voxel, t_env *env)
 {
 	t_point	pixel;
 	t_point	projected_pixel;
 
-	pixel.x = (voxel.x * (env->win_width / 2)
+	rotate_z(&voxel, env);
+	if (env->view.zoom < 0.0f)
+		env->view.zoom = 0.0f;
+	pixel.x = (voxel.x * env->view.zoom * (env->win_width / 2)
 			/ env->map->width) + (env->win_width / 3);
-	pixel.y = (voxel.y * (env->win_height / 2)
+	pixel.y = (voxel.y * env->view.zoom * (env->win_height / 2)
 			/ env->map->height) - (env->win_height / 3);
-	projected_pixel.x = ((pixel.x - pixel.y) * cos(M_PI / 6));
+	projected_pixel.x = ((pixel.x - pixel.y) * cos(M_PI / 6))
+		+ env->view.shift.x;
 	projected_pixel.y = ((pixel.x + pixel.y) * sin(M_PI / 6)
-			- (voxel.z));
+			- (voxel.z * env->view.z_scale * env->view.zoom))
+		+ env->view.shift.y;
 	return (projected_pixel);
 }
 

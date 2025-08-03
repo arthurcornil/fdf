@@ -39,13 +39,18 @@ bool	fill_points(t_map *map, unsigned int i, int fd)
 	line = get_next_line(fd);
 	if (!line)
 		return (false);
-	line[ft_strlen(line) - 1] = (char)0;
-	strs = ft_split(line, ' ');
+	if (line[ft_strlen(line) - 1] == '\n')
+		line[ft_strlen(line) - 1] = (char)0;
 	if (map->width == 0)
+	{
+		strs = ft_split(line, ' ');
+		if (!strs)
+			return (false);
 		map->width = get_width(strs);
+		free_strs(strs);
+	}
 	map->points[i] = parse_line(line);
 	free(line);
-	free_strs(strs);
 	return (true);
 }
 
@@ -66,9 +71,7 @@ void	fill_lines(t_map *map, int fd)
 			break ;
 		if (!map->points[i])
 		{
-			while (get_next_line(fd))
-				;
-			close(fd);
+			free_gnl_buffer(fd);
 			free_map(map, EXIT_FAILURE);
 		}
 		i ++;

@@ -6,7 +6,7 @@
 /*   By: arcornil <arcornil@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 13:32:30 by arcornil          #+#    #+#             */
-/*   Updated: 2025/07/19 22:10:39 by arcornil         ###   ########.fr       */
+/*   Updated: 2025/07/21 08:36:55 by arcornil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ int	*get_nums(char	**strs, unsigned int width)
 		nums[i] = ft_atoi(strs[i]);
 		i ++;
 	}
-	free(strs);
+	free_strs(strs);
 	return (nums);
 }

@@ -12,7 +12,8 @@
 
 #include "../includes/fdf.h"
 
-static int	get_color(int delta, t_color color_a, t_color color_b, int i)
+static int	get_interval_color(int delta, t_color color_a,
+		t_color color_b, int i)
 {
 	t_color	color;
 	float	percentage;
@@ -45,7 +46,8 @@ void	put_line_pixels_loop(t_line_loop_params *p)
 	i = 0;
 	while (i <= p->dx)
 	{
-		color = get_color(p->dx, p->line->color_a, p->line->color_b, i);
+		color = get_interval_color(p->dx, p->line->color_a,
+				p->line->color_b, i);
 		put_pixel_steep(p->img, p->pixel, color, p->is_steep);
 		if (p_err >= 0)
 		{
